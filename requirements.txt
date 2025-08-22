@@ -1,0 +1,14 @@
+sqlalchemy
+scapy
+fastapi
+uvicorn
+requests
+python-jose[cryptography]
+passlib[bcrypt]
+python-multipart
+python-nmap
+aiosqlite
+ratelimit
+psutil
+pandas
+PyJWT

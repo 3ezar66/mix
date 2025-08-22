@@ -1,0 +1,248 @@
+{
+  "appId": "com.kashif.mining-detector",
+  "productName": "کاشف شبح حبشی",
+  "directories": {
+    "output": "dist-electron",
+    "buildResources": "electron/assets"
+  },
+  "files": [
+    "dist/**/*",
+    "server/**/*",
+    "shared/**/*",
+    "electron/**/*",
+    "package.json",
+    "ilam_mining.db",
+    "data/**/*",
+    "drizzle/**/*",
+    "!**/node_modules/*/{CHANGELOG.md,README.md,README,readme.md,readme}",
+    "!**/node_modules/*/{test,__tests__,tests,powered-test,example,examples}",
+    "!**/node_modules/*.d.ts",
+    "!**/node_modules/.bin",
+    "!**/*.{iml,o,hprof,orig,pyc,pyo,rbc,swp,csproj,sln,xproj}",
+    "!.editorconfig",
+    "!**/._*",
+    "!**/{.DS_Store,.git,.hg,.svn,CVS,RCS,SCCS,.gitignore,.gitattributes}",
+    "!**/{__pycache__,thumbs.db,.flowconfig,.idea,.vs,.nyc_output}",
+    "!**/{appveyor.yml,.travis.yml,circle.yml}",
+    "!**/{npm-debug.log,yarn.lock,.yarn-integrity,.yarn-metadata.json}"
+  ],
+  "extraResources": [
+    {
+      "from": "server/services",
+      "to": "server/services",
+      "filter": [
+        "**/*"
+      ]
+    },
+    {
+      "from": "shared",
+      "to": "shared",
+      "filter": [
+        "**/*"
+      ]
+    },
+    {
+      "from": "data",
+      "to": "data",
+      "filter": [
+        "**/*"
+      ]
+    },
+    {
+      "from": "drizzle",
+      "to": "drizzle",
+      "filter": [
+        "**/*"
+      ]
+    },
+    {
+      "from": "ilam_mining.db",
+      "to": "ilam_mining.db"
+    }
+  ],
+  "win": {
+    "target": [
+      {
+        "target": "nsis",
+        "arch": [
+          "x64",
+          "ia32"
+        ]
+      },
+      {
+        "target": "portable",
+        "arch": [
+          "x64",
+          "ia32"
+        ]
+      }
+    ],
+    "icon": "electron/assets/icon.ico",
+          "requestedExecutionLevel": "admin",
+    "artifactName": "${productName}-${version}-${arch}.${ext}",
+    "publisherName": "Kashif Team",
+    "verifyUpdateCodeSignature": false,
+    "signingHashAlgorithms": [
+      "sha256"
+    ]
+  },
+  "nsis": {
+    "oneClick": false,
+    "allowToChangeInstallationDirectory": true,
+    "createDesktopShortcut": true,
+    "createStartMenuShortcut": true,
+    "shortcutName": "کاشف شبح حبشی",
+    "installerIcon": "electron/assets/icon.ico",
+    "uninstallerIcon": "electron/assets/icon.ico",
+    "installerHeaderIcon": "electron/assets/icon.ico",
+    "deleteAppDataOnUninstall": false,
+    "license": "LICENSE",
+    "language": "1033",
+    "installerLanguages": [
+      "en-US",
+      "fa-IR"
+    ],
+    "perMachine": true,
+    "runAfterFinish": true,
+    "menuCategory": "کاشف شبح حبشی"
+  },
+      "portable": {
+      "artifactName": "${productName}-${version}-portable-${arch}.${ext}",
+      "requestExecutionLevel": "admin"
+    },
+  "mac": {
+    "target": [
+      {
+        "target": "dmg",
+        "arch": [
+          "x64",
+          "arm64"
+        ]
+      },
+      {
+        "target": "zip",
+        "arch": [
+          "x64",
+          "arm64"
+        ]
+      }
+    ],
+    "icon": "electron/assets/icon.icns",
+    "category": "public.app-category.utilities",
+    "hardenedRuntime": true,
+    "gatekeeperAssess": false,
+    "artifactName": "${productName}-${version}-${arch}.${ext}",
+    "darkModeSupport": true
+  },
+  "dmg": {
+    "title": "${productName} ${version}",
+    "icon": "electron/assets/icon.icns",
+    "window": {
+      "width": 540,
+      "height": 380
+    },
+    "contents": [
+      {
+        "x": 130,
+        "y": 220
+      },
+      {
+        "x": 410,
+        "y": 220,
+        "type": "link",
+        "path": "/Applications"
+      }
+    ],
+    "sign": false
+  },
+  "linux": {
+    "target": [
+      {
+        "target": "AppImage",
+        "arch": [
+          "x64",
+          "ia32",
+          "armv7l",
+          "arm64"
+        ]
+      },
+      {
+        "target": "deb",
+        "arch": [
+          "x64",
+          "ia32",
+          "armv7l",
+          "arm64"
+        ]
+      },
+      {
+        "target": "rpm",
+        "arch": [
+          "x64",
+          "ia32",
+          "armv7l",
+          "arm64"
+        ]
+      }
+    ],
+    "icon": "electron/assets/icon.png",
+    "category": "Utility",
+    "artifactName": "${productName}-${version}-${arch}.${ext}",
+    "desktop": {
+      "Name": "کاشف شبح حبشی",
+      "Comment": "سیستم ملی تشخیص ماینینگ غیرمجاز",
+      "Keywords": "mining;cryptocurrency;detection;network;security",
+      "StartupNotify": true,
+      "Terminal": false,
+      "Type": "Application"
+    }
+  },
+  "appImage": {
+    "artifactName": "${productName}-${version}-${arch}.${ext}",
+    "category": "Utility"
+  },
+  "deb": {
+    "artifactName": "${productName}-${version}-${arch}.${ext}",
+    "depends": [
+      "libgtk-3-0",
+      "libnotify4",
+      "libnss3",
+      "libxss1",
+      "libxtst6",
+      "xdg-utils",
+      "libatspi2.0-0",
+      "libdrm2",
+      "libgbm1",
+      "libasound2"
+    ],
+    "packageCategory": "utils",
+    "priority": "optional"
+  },
+  "rpm": {
+    "artifactName": "${productName}-${version}-${arch}.${ext}",
+    "depends": [
+      "gtk3",
+      "libnotify",
+      "nss",
+      "libXScrnSaver",
+      "libXtst",
+      "xdg-utils",
+      "at-spi2-atk",
+      "libdrm",
+      "mesa-libgbm",
+      "alsa-lib"
+    ]
+  },
+  "asar": true,
+  "asarUnpack": [
+    "node_modules/better-sqlite3/**/*",
+    "node_modules/serialport/**/*",
+    "server/services/**/*"
+  ],
+  "forceCodeSigning": false,
+  "electronVersion": "28.0.0",
+  "buildVersion": "2.0.0",
+  "compression": "maximum",
+  "removePackageScripts": true,
+  "removePackageKeywords": true
+}

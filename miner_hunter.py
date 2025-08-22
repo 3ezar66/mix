@@ -1,0 +1,3 @@
+# کد کامل در فایل miner_hunter.py همین Space موجود است
+# اجرای ترکیبی اسکن شبکه (NMap)، RF، BLE، WiFi، SNMP، Acoustic و...
+# اجرا: python miner_hunter.py --targets 192.168.1.0/24 --rf --wifi --ble --acoustic --snmp
