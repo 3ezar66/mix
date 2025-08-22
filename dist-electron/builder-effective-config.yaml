@@ -1,0 +1,15 @@
+directories:
+  output: dist-electron
+  buildResources: build
+appId: com.kashif.mining.detector
+productName: Kashif Mining Detector
+files:
+  - filter:
+      - dist/**/*
+      - electron/**/*
+win:
+  target:
+    - portable
+    - nsis
+icon: ./build/icon.png
+electronVersion: 28.3.3
