@@ -1229,8 +1229,7 @@ class MiningDeviceDetector:
                     # ⚠️ اسکن حرارتی واقعی مورد نیاز است
                     raise Exception("اسکن حرارتی واقعی مورد نیاز است. لطفا دوربین حرارتی واقعی نصب کنید.")
                     
-                    # Apply thermal-like processing
-                    # thermal_data = self.process_image_as_thermal(gray)  # حذف شده
+
                     
                     return None  # داده واقعی حرارتی مورد نیاز است
             
@@ -1370,9 +1369,7 @@ class MiningDeviceDetector:
         except Exception as e:
             return {'error': f"Hardware detection failed: {str(e)}"}
     
-    # def process_image_as_thermal(self, image: np.ndarray) -> np.ndarray:
-    #     """⚠️ این تابع کاملاً حذف شده است"""
-    #     raise Exception("این تابع شبیه‌سازی کاملاً حذف شده است. فقط اسکن حرارتی واقعی مجاز است.")
+
     
     def parse_usb_thermal_response(self, response: bytes) -> np.ndarray:
         """Parse thermal data from USB response"""
@@ -1410,8 +1407,7 @@ class MiningDeviceDetector:
                     # ⚠️ اسکن حرارتی واقعی مورد نیاز است
                     raise Exception("اسکن حرارتی واقعی مورد نیاز است. لطفا دوربین حرارتی واقعی نصب کنید.")
                     
-                    # Convert to thermal-like data
-                    # thermal_data = self.process_image_as_thermal(img)  # حذف شده
+
                     
                     return None  # داده واقعی حرارتی مورد نیاز است
             
