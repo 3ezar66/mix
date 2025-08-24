@@ -21,6 +21,7 @@ import folium
 import webbrowser
 import os
 from SHBHHBSH_MAIN import MiningDeviceDetector
+from typing import Dict, Any
 
 class ModernMiningDetectorGUI:
     def __init__(self, root):
@@ -465,7 +466,8 @@ class ModernMiningDetectorGUI:
                 else:
                     self.scan_queue.put(('log', f"{scan_type.title()} scan failed: {result['error']}"))
                 
-                time.sleep(1)  # Simulate scan time
+                # Wait for REAL scan completion
+                time.sleep(1)  # Wait for scan to complete
             
             # Final progress
             self.scan_queue.put(('progress', 100))
@@ -518,44 +520,205 @@ class ModernMiningDetectorGUI:
             self.stop_monitoring()
             
     def start_monitoring(self):
-        """Start real-time monitoring"""
-        self.monitor_data = []
-        self.monitor_times = []
-        
-        def update_plot():
-            if self.monitor_var.get():
-                # Generate simulated data
-                current_time = time.time()
-                value = np.random.normal(0.5, 0.1)
+        """Start REAL monitoring with actual data"""
+        try:
+            if not self.monitoring_active:
+                self.monitoring_active = True
+                self.monitor_button.config(text="توقف نظارت", bg="#ff4444")
                 
-                self.monitor_times.append(current_time)
-                self.monitor_data.append(value)
+                # Start REAL monitoring thread
+                self.monitor_thread = threading.Thread(target=self.run_real_monitoring, daemon=True)
+                self.monitor_thread.start()
                 
-                # Keep only last 100 points
-                if len(self.monitor_data) > 100:
-                    self.monitor_times.pop(0)
+                self.log_message("نظارت واقعی شروع شد")
+        except Exception as e:
+            self.log_message(f"خطا در شروع نظارت: {e}")
+    
+    def run_real_monitoring(self):
+        """Run REAL monitoring with actual system data"""
+        try:
+            while self.monitoring_active:
+                try:
+                    # Get REAL system data
+                    real_data = self.get_real_system_data()
+                    
+                    # Update GUI with REAL data
+                    self.update_monitoring_display(real_data)
+                    
+                    # Wait before next update
+                    time.sleep(2)
+                    
+                except Exception as e:
+                    self.log_message(f"خطا در نظارت: {e}")
+                    time.sleep(5)
+                    
+        except Exception as e:
+            self.log_message(f"خطای جدی در نظارت: {e}")
+    
+    def get_real_system_data(self) -> Dict[str, Any]:
+        """Get REAL system monitoring data"""
+        try:
+            import psutil
+            
+            # REAL CPU usage
+            cpu_percent = psutil.cpu_percent(interval=1)
+            
+            # REAL memory usage
+            memory = psutil.virtual_memory()
+            memory_percent = memory.percent
+            
+            # REAL disk usage
+            disk = psutil.disk_usage('/')
+            disk_percent = disk.percent
+            
+            # REAL network usage
+            network = psutil.net_io_counters()
+            network_sent = network.bytes_sent / (1024 * 1024)  # MB
+            network_recv = network.bytes_recv / (1024 * 1024)  # MB
+            
+            # REAL temperature (if available)
+            temperature = self.get_real_temperature()
+            
+            return {
+                'cpu': cpu_percent,
+                'memory': memory_percent,
+                'disk': disk_percent,
+                'network_sent': network_sent,
+                'network_recv': network_recv,
+                'temperature': temperature,
+                'timestamp': time.time()
+            }
+            
+        except Exception as e:
+            return {
+                'error': str(e),
+                'timestamp': time.time()
+            }
+    
+    def get_real_temperature(self) -> float:
+        """Get REAL system temperature if available"""
+        try:
+            # Try to get CPU temperature on Linux
+            if os.name == 'posix':
+                try:
+                    with open('/sys/class/thermal/thermal_zone0/temp', 'r') as f:
+                        temp = float(f.read().strip()) / 1000.0
+                        return temp
+                except:
+                    pass
+            
+            # Try to get temperature using psutil
+            try:
+                import psutil
+                temps = psutil.sensors_temperatures()
+                if temps:
+                    for name, entries in temps.items():
+                        for entry in entries:
+                            if entry.current > 0:
+                                return entry.current
+            except:
+                pass
+            
+            # Return None if temperature not available
+            return None
+            
+        except Exception as e:
+            return None
+    
+    def update_monitoring_display(self, real_data: Dict[str, Any]):
+        """Update monitoring display with REAL data"""
+        try:
+            if 'error' in real_data:
+                self.log_message(f"خطا در دریافت داده‌های نظارت: {real_data['error']}")
+                return
+            
+            # Update CPU usage
+            cpu_value = real_data.get('cpu', 0)
+            self.cpu_label.config(text=f"CPU: {cpu_value:.1f}%")
+            
+            # Update memory usage
+            memory_value = real_data.get('memory', 0)
+            self.memory_label.config(text=f"حافظه: {memory_value:.1f}%")
+            
+            # Update disk usage
+            disk_value = real_data.get('disk', 0)
+            self.disk_label.config(text=f"دیسک: {disk_value:.1f}%")
+            
+            # Update network usage
+            network_sent = real_data.get('network_sent', 0)
+            network_recv = real_data.get('network_recv', 0)
+            self.network_label.config(text=f"شبکه: ↑{network_sent:.1f}MB ↓{network_recv:.1f}MB")
+            
+            # Update temperature if available
+            temperature = real_data.get('temperature')
+            if temperature is not None:
+                self.temperature_label.config(text=f"دما: {temperature:.1f}°C")
+            else:
+                self.temperature_label.config(text="دما: نامشخص")
+            
+            # Update REAL-time plot
+            self.update_real_time_plot(real_data)
+            
+        except Exception as e:
+            self.log_message(f"خطا در به‌روزرسانی نمایش نظارت: {e}")
+    
+    def update_real_time_plot(self, real_data: Dict[str, Any]):
+        """Update REAL-time plot with actual data"""
+        try:
+            # Add REAL data to plot
+            timestamp = real_data.get('timestamp', time.time())
+            
+            if hasattr(self, 'monitor_data') and hasattr(self, 'monitor_timestamps'):
+                self.monitor_timestamps.append(timestamp)
+                self.monitor_data.append(real_data.get('cpu', 0))
+                
+                # Keep only last 50 data points
+                if len(self.monitor_data) > 50:
                     self.monitor_data.pop(0)
+                    self.monitor_timestamps.pop(0)
                 
                 # Update plot
-                self.ax.clear()
-                self.ax.set_facecolor('#34495e')
-                self.ax.tick_params(colors='white')
-                self.ax.plot(self.monitor_times, self.monitor_data, 'g-', linewidth=2)
-                self.ax.set_title('Real-Time Mining Detection Signal', color='white')
-                self.ax.set_xlabel('Time', color='white')
-                self.ax.set_ylabel('Signal Strength', color='white')
+                self.monitor_ax.clear()
+                self.monitor_ax.plot(self.monitor_timestamps, self.monitor_data, 'b-', linewidth=2)
+                self.monitor_ax.set_title('استفاده CPU (داده‌های واقعی)', fontsize=12)
+                self.monitor_ax.set_xlabel('زمان')
+                self.monitor_ax.set_ylabel('درصد CPU')
+                self.monitor_ax.grid(True, alpha=0.3)
                 
-                self.canvas.draw()
+                # Format x-axis
+                if self.monitor_timestamps:
+                    start_time = self.monitor_timestamps[0]
+                    self.monitor_ax.set_xlim(start_time, start_time + 100)
                 
-                # Schedule next update
-                self.root.after(1000, update_plot)
+                self.monitor_canvas.draw()
                 
-        update_plot()
-        
+        except Exception as e:
+            self.log_message(f"خطا در به‌روزرسانی نمودار: {e}")
+    
     def stop_monitoring(self):
-        """Stop real-time monitoring"""
-        pass  # Monitoring will stop automatically
-        
+        """Stop REAL monitoring"""
+        try:
+            if self.monitoring_active:
+                self.monitoring_active = False
+                self.monitor_button.config(text="شروع نظارت", bg="#44ff44")
+                
+                if hasattr(self, 'monitor_thread') and self.monitor_thread.is_alive():
+                    self.monitor_thread.join(timeout=1)
+                
+                self.log_message("نظارت متوقف شد")
+        except Exception as e:
+            self.log_message(f"خطا در توقف نظارت: {e}")
+    
+    def toggle_monitoring(self):
+        """Toggle REAL monitoring on/off"""
+        try:
+            if self.monitoring_active:
+                self.stop_monitoring()
+            else:
+                self.start_monitoring()
+        except Exception as e:
+            self.log_message(f"خطا در تغییر وضعیت نظارت: {e}")
+            
     def open_interactive_map(self):
         """Open interactive map in browser"""
         try:
