@@ -1226,16 +1226,19 @@ class MiningDeviceDetector:
                     # Convert to grayscale for thermal-like processing
                     gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
                     
-                    # Apply thermal-like processing
-                    thermal_data = self.process_image_as_thermal(gray)
+                    # ⚠️ اسکن حرارتی واقعی مورد نیاز است
+                    raise Exception("اسکن حرارتی واقعی مورد نیاز است. لطفا دوربین حرارتی واقعی نصب کنید.")
+                    
+                    # Convert to thermal-like data
+                    # thermal_data = self.process_image_as_thermal(gray)  # حذف شده
                     
                     return {
-                        'data': thermal_data.tolist(),
-                        'width': thermal_data.shape[1],
-                        'height': thermal_data.shape[0],
+                        'data': None,  # داده واقعی حرارتی مورد نیاز است
+                        'width': gray.shape[1],
+                        'height': gray.shape[0],
                         'camera_type': 'OpenCV Camera',
-                        'temperature_unit': 'Relative',
-                        'note': 'Converted from visible light camera'
+                        'temperature_unit': 'Real Required',
+                        'note': 'دوربین حرارتی واقعی مورد نیاز است'
                     }
             
             return None
@@ -1375,27 +1378,8 @@ class MiningDeviceDetector:
             return {'error': f"Hardware detection failed: {str(e)}"}
     
     def process_image_as_thermal(self, image: np.ndarray) -> np.ndarray:
-        """Process visible image to simulate thermal characteristics"""
-        try:
-            # Apply thermal-like processing
-            # Convert to float
-            thermal_data = image.astype(np.float32) / 255.0
-            
-            # Apply thermal-like filtering
-            thermal_data = cv2.GaussianBlur(thermal_data, (5, 5), 0)
-            
-            # Enhance contrast for thermal-like appearance
-            thermal_data = cv2.equalizeHist((thermal_data * 255).astype(np.uint8))
-            thermal_data = thermal_data.astype(np.float32) / 255.0
-            
-            # Scale to typical thermal range (20-80°C equivalent)
-            thermal_data = 20 + (thermal_data * 60)
-            
-            return thermal_data
-            
-        except Exception as e:
-            # Return original image if processing fails
-            return image.astype(np.float32)
+        """⚠️ این تابع حذف شده است - فقط اسکن حرارتی واقعی مجاز است"""
+        raise Exception("این تابع شبیه‌سازی حذف شده است. فقط اسکن حرارتی واقعی مجاز است.")
     
     def parse_usb_thermal_response(self, response: bytes) -> np.ndarray:
         """Parse thermal data from USB response"""
